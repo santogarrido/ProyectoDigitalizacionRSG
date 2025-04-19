@@ -12,12 +12,16 @@
         <MudTh>Nombre</MudTh>
         <MudTh>Cantidad</MudTh>
         <MudTh>Precio</MudTh>
+        <MudTh>Acciones</MudTh>
     </HeaderContent>
     <RowTemplate Context="productos">
         <MudTd>@productos.Id</MudTd>
         <MudTd>@productos.Nombre</MudTd>
         <MudTd>@productos.Cantidad</MudTd>
         <MudTd>@productos.Precio</MudTd>
+        <MudTd>
+            <MudButton Color="Color.Error" OnClick="@(() => EliminarProducto(productos.Id))">Eliminar</MudButton>
+        </MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -28,4 +32,16 @@
     {
         productos = Db.Productos.ToList();
     }
+
+    void EliminarProducto(int id)
+    {
+        var producto = Db.Productos.Find(id);
+        if (producto != null)
+        {
+            Db.Productos.Remove(producto);
+            Db.SaveChanges();
+            productos = Db.Productos.ToList();
+        }
+    }
+
 }

@@ -35,5 +35,23 @@ namespace ProyectoDigitalizacion2.Controllers
                 return BadRequest($"Error: {ex.Message}\n{ex.InnerException?.Message}");
             }
         }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var producto = _context.Productos.FirstOrDefault(u => u.Id == id);
+            if (producto == null)
+                return NotFound();
+
+            try
+            {
+                _context.Productos.Remove(producto);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al eliminar: {ex.Message}\n{ex.InnerException?.Message}");
+            }
+        }
     }
 }

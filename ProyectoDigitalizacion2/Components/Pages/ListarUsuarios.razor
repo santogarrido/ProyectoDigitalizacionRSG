@@ -1,5 +1,6 @@
 ﻿@page "/ListarUsuarios"
 @using ProyectoDigitalizacion2.Components.Models;
+@inject IDialogService DialogService
 @inject ApplicationDbContext Db
 
 <PageTitle>ListarUsuarios</PageTitle>
@@ -12,13 +13,17 @@
         <MudTh>Email</MudTh>
         <MudTh>Contraseña</MudTh>
         <MudTh>Rol</MudTh>
-    </HeaderContent>
+        <MudTh>Acciones</MudTh>
+        </HeaderContent>
     <RowTemplate Context="usuarios">
         <MudTh>@usuarios.Id</MudTh>
         <MudTd>@usuarios.Nombre</MudTd>
         <MudTd>@usuarios.Email</MudTd>
         <MudTd>@usuarios.Contraseña</MudTd>
         <MudTd>@usuarios.Rol</MudTd>
+        <MudTd>
+            <MudButton Color="Color.Error" OnClick="@(() => EliminarUsuario(usuarios.Id))">Eliminar</MudButton>
+        </MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -27,6 +32,7 @@
 
 @code{
     List<Usuario> usuarios = new();
+    Usuario usuarioEditando = new();
 
   
      protected override void OnInitialized()
@@ -34,5 +40,15 @@
         usuarios = Db.Usuarios.ToList();
     }
     
-
+    
+    void EliminarUsuario(int id)
+    {
+        var usuario = Db.Usuarios.Find(id);
+        if (usuario != null)
+        {
+            Db.Usuarios.Remove(usuario);
+            Db.SaveChanges();
+            usuarios = Db.Usuarios.ToList();
+        }
+    }
 }
