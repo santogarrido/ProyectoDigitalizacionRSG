@@ -1,0 +1,38 @@
+﻿@page "/ListarUsuarios"
+@using ProyectoDigitalizacion2.Components.Models;
+@inject ApplicationDbContext Db
+
+<PageTitle>ListarUsuarios</PageTitle>
+<h1>Lista Usuarios</h1>
+
+<MudTable Items="usuarios" Dense="true">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Nombre</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Contraseña</MudTh>
+        <MudTh>Rol</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="usuarios">
+        <MudTh>@usuarios.Id</MudTh>
+        <MudTd>@usuarios.Nombre</MudTd>
+        <MudTd>@usuarios.Email</MudTd>
+        <MudTd>@usuarios.Contraseña</MudTd>
+        <MudTd>@usuarios.Rol</MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+
+
+@code{
+    List<Usuario> usuarios = new();
+
+  
+     protected override void OnInitialized()
+    {
+        usuarios = Db.Usuarios.ToList();
+    }
+    
+
+}

@@ -1,0 +1,104 @@
+﻿@page "/"
+
+<PageTitle>Registro Usuarios</PageTitle>
+
+@using System.ComponentModel.DataAnnotations
+@using ProyectoDigitalizacion2.Components.Models;
+@inject ApplicationDbContext Db
+
+<MudItem xs="12">
+    <MudPaper Class="pa-4">
+        <MudForm @ref="form">
+            <MudText>Nombre:</MudText>
+            <MudTextField T="string" @bind-Value="Nombre" Required="true" RequiredError="El nombre es obligatorio" /><br />
+
+            <MudText>Email:</MudText>
+            <MudTextField T="string" @bind-Value="Email" Required="true" RequiredError="El email es obligatorio"
+                          Validation="@(new EmailAddressAttribute() {ErrorMessage = "El email es inválido"})" /><br />
+
+            <MudText>Contraseña:</MudText>
+            <MudTextField T="string" @bind-Value="Contraseña" Required="true"
+                          RequiredError="La contraseña es obligatoria" @ref="pwField1" InputType="InputType.Password" /><br />
+
+            <MudText>Repite la contraseña:</MudText>
+            <MudTextField T="string" InputType="InputType.Password" @bind-Value="ConfirmarContraseña"
+                          Validation="@(new Func<string, string>(PasswordMatch))" /><br />
+
+            <div class="d-flex">
+                <MudRadioGroup T="string" @bind-Value="Rol" Label="Selecciona un rol" Required="true" RequiredError="El tipo de cuenta es obligatorio">
+                    <MudRadio Value=@("Administrador")>Administrador</MudRadio>
+                    <MudRadio Value=@("Encargado")>Encargado</MudRadio>
+                </MudRadioGroup>
+            </div>
+
+            <div class="d-flex align-center justify-space-between">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Enviar" Class="ml-auto">Registrar</MudButton>
+            </div>
+        </MudForm>
+    </MudPaper>
+</MudItem>
+
+@if (!string.IsNullOrEmpty(Mensaje))
+{
+    <MudAlert Severity="@TipoMensaje" Elevation="1">
+        @Mensaje
+    </MudAlert>
+}
+
+@code {
+    private string Mensaje;
+    private Severity TipoMensaje;
+
+    MudForm form;
+    MudTextField<string> pwField1;
+    private string Nombre { get; set; }
+    private string Email { get; set; }
+    private string Contraseña { get; set; }
+    private string ConfirmarContraseña { get; set; }
+    private string Rol { get; set; }
+
+    private string PasswordMatch(string paswd)
+    {
+        if (Contraseña != paswd)
+            return "Las contraseñas no coinciden";
+        return null;
+    }
+
+    private async Task Enviar()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var nuevoUsuario = new Usuario
+                {
+                    Nombre = Nombre,
+                    Email = Email,
+                    Contraseña = Contraseña,
+                    Rol = Rol
+                };
+
+            try
+            {
+                // Guardar el nuevo usuario en la base de datos
+                Db.Usuarios.Add(nuevoUsuario);
+                await Db.SaveChangesAsync();
+
+                Mensaje = "Usuario registrado correctamente";
+                TipoMensaje = Severity.Success;
+
+                // Limpiar los campos del formulario
+                Nombre = string.Empty;
+                Email = string.Empty;
+                Contraseña = string.Empty;
+                ConfirmarContraseña = string.Empty;
+                Rol = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                Mensaje = $"Error: {ex.Message}";
+                TipoMensaje = Severity.Error;
+            }
+        }
+    }
+}

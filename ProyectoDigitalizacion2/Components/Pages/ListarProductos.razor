@@ -1,0 +1,25 @@
+﻿@page "/ListarProductos"
+@using ProyectoDigitalizacion2.Components.Models;
+
+<PageTitle>ListaProductos</PageTitle>
+
+<h1>Lista Productos</h1>
+
+<MudTable Items="productos" Dense="true">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Nombre</MudTh>
+        <MudTh>Cantidad</MudTh>
+        <MudTh>Precio</MudTh>
+    </HeaderContent>
+    <RowTemplate Context="producto">
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private List<Productos> productos = new();
+}
