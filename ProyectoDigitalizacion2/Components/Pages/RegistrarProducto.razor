@@ -1,3 +1,80 @@
 ﻿@page "/RegistrarProducto"
+@using System.ComponentModel.DataAnnotations
 @using ProyectoDigitalizacion2.Components.Models;
+@inject ApplicationDbContext Db
+
+<PageTitle>RegistroProducto</PageTitle>
+
+<MudItem xs="12">
+    <MudPaper Class="pa-4">
+        <MudForm @ref="form">
+            <MudText>Nombre:</MudText>
+            <MudTextField T="string" @bind-Value="Nombre" Required="true" RequiredError="El nombre es obligatorio" /><br />
+
+            <MudText>Cantidad:</MudText>
+            <MudTextField T="int" @bind-Value="Cantidad" Required="true" RequiredError="La cantidad de productos es obligatoria"/><br />
+
+
+            <MudText>Precio:</MudText>
+            <MudTextField T="double" @bind-Value="Precio" Required="true" RequiredError="El precio del producto es obligatorio"/><br />
+
+
+            <div class="d-flex align-center justify-space-between">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Enviar" Class="ml-auto">Registrar</MudButton>
+            </div>
+        </MudForm>
+    </MudPaper>
+</MudItem>
+
+@if (!string.IsNullOrEmpty(Mensaje))
+{
+    <MudAlert Severity="@TipoMensaje" Elevation="1">
+        @Mensaje
+    </MudAlert>
+}
+
+@code{
+    MudForm form;
+    MudTextField<string> pwField1;
+    private string Mensaje;
+    private Severity TipoMensaje;
+    private string Nombre { get; set; }
+    private int Cantidad { get; set; }
+    private double Precio { get; set; }
+
+    private async Task Enviar()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+
+
+            try
+            {
+                // Guardar el nuevo usuario en la base de datos
+                var nuevoProducto = new Productos
+                    {
+                        Nombre = Nombre,
+                        Cantidad = Cantidad,
+                        Precio = Precio
+                    };
+
+                Db.Productos.Add(nuevoProducto);
+                await Db.SaveChangesAsync();
+
+                Mensaje = "Producto registrado correctamente";
+                TipoMensaje = Severity.Success;
+
+                // Limpiar los campos del formulario
+                
+            }
+            catch (Exception ex)
+            {
+                Mensaje = $"Error: {ex.Message}";
+                TipoMensaje = Severity.Error;
+            }
+        }
+    }
+}
 

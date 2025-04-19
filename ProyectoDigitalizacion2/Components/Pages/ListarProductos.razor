@@ -1,5 +1,6 @@
 ﻿@page "/ListarProductos"
 @using ProyectoDigitalizacion2.Components.Models;
+@inject ApplicationDbContext Db
 
 <PageTitle>ListaProductos</PageTitle>
 
@@ -12,14 +13,19 @@
         <MudTh>Cantidad</MudTh>
         <MudTh>Precio</MudTh>
     </HeaderContent>
-    <RowTemplate Context="producto">
-        <MudTd></MudTd>
-        <MudTd></MudTd>
-        <MudTd></MudTd>
-        <MudTd></MudTd>
+    <RowTemplate Context="productos">
+        <MudTd>@productos.Id</MudTd>
+        <MudTd>@productos.Nombre</MudTd>
+        <MudTd>@productos.Cantidad</MudTd>
+        <MudTd>@productos.Precio</MudTd>
     </RowTemplate>
 </MudTable>
 
 @code {
     private List<Productos> productos = new();
+
+    protected override void OnInitialized()
+    {
+        productos = Db.Productos.ToList();
+    }
 }

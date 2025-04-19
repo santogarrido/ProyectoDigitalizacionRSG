@@ -1,17 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoDigitalizacion2.Components.Models
 {
+    [Table("productos")]
     public class Productos
     {
         [Key]
-        private int Id { get; set; }
+        public int Id { get; set; }
 
-        private string Nombre { get; set; }
+        public string Nombre { get; set; }
 
-        private int Cantidad { get; set; }
+        public int Cantidad { get; set; }
 
-        private int Precio { get; set;  }
+        public double Precio { get; set;  }
 
         public Productos() { }
        

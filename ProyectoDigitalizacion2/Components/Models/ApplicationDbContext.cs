@@ -10,5 +10,6 @@ namespace ProyectoDigitalizacion2.Components.Models
 
        
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Productos> Productos { get; set; }
     }
 }
