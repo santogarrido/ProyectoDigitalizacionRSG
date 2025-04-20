@@ -29,3 +29,5 @@ Para ello hemos desarollado las siguientes Clases:
 * Framework: [MudBlazor](https://mudblazor.com/)
 * Base de datos: [Mysql](https://www.mysql.com/) 
 * Docker : [docker](https://www.docker.com/)
+
+La base de datos la hemos dockerizado. Para ser igual que la que he usado para el proyecto utilizar el archivo proporcionado en el repositorio ```📜 dockerfile```
